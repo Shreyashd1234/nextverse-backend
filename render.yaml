@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: nextverse-backend
+    env: php
+    plan: starter
+    buildCommand: composer install --no-dev --optimize-autoloader
+    preDeployCommand: php artisan migrate --force
+    startCommand: php artisan serve --host=0.0.0.0 --port=10000
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        value: https://your-backend.onrender.com
+      - key: APP_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_SSLMODE
+        value: require
+      - key: SESSION_DRIVER
+        value: cookie
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
