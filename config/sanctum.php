@@ -15,7 +15,11 @@ return [
     |
     */
 
-    'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', 'localhost,localhost:3000,127.0.0.1,127.0.0.1:3000')),
+    // Sanctum only treats configured first-party SPA domains as cookie-authenticated stateful requests.
+    'stateful' => array_filter(array_map('trim', explode(',', env(
+        'SANCTUM_STATEFUL_DOMAINS',
+        'nextverse-frontend.vercel.app,localhost,localhost:3000,127.0.0.1,127.0.0.1:3000'
+    )))),
 
     /*
     |--------------------------------------------------------------------------

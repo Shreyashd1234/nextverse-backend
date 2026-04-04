@@ -11,9 +11,14 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:3000', 'http://127.0.0.1:3000'],
+    // Credentials require an explicit trusted origin; wildcard (*) is invalid with cookies.
+    'allowed_origins' => ['https://nextverse-frontend.vercel.app'],
 
-    'allowed_origins_patterns' => [],
+    // Keep local SPA development working without relaxing production origins.
+    'allowed_origins_patterns' => [
+        '#^http://localhost(:\\d+)?$#',
+        '#^http://127\\.0\\.0\\.1(:\\d+)?$#',
+    ],
 
     'allowed_headers' => ['*'],
 

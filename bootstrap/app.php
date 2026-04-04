@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Middleware\HandleCors as LaravelHandleCors;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Session\TokenMismatchException;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +16,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Render sits behind a proxy/load balancer, so trust forwarded headers from all proxies.
+        $middleware->trustProxies(at: '*');
+
+        // Keep compatibility with projects that expect Fruitcake while supporting Laravel's core HandleCors.
+        $middleware->append(class_exists(\Fruitcake\Cors\HandleCors::class)
+            ? \Fruitcake\Cors\HandleCors::class
+            : LaravelHandleCors::class);
+
         $middleware->statefulApi();
         $middleware->alias([
             'role' => \App\Http\Middleware\CheckRole::class,
