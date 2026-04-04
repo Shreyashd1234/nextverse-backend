@@ -169,8 +169,9 @@ return [
     |
     */
 
-    // Default to secure cookies for Render HTTPS; local HTTP can still override safely.
-    'secure' => env('SESSION_SECURE_COOKIE', env('APP_ENV') !== 'local'),
+    // SameSite=None requires Secure=true in modern browsers for cross-origin cookies.
+    // Keep localhost override available via SESSION_SECURE_COOKIE=false when developing on HTTP.
+    'secure' => env('SESSION_SECURE_COOKIE', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -200,7 +201,9 @@ return [
     |
     */
 
-    'same_site' => env('SESSION_SAME_SITE', 'lax'),
+    // SameSite=None is required for Sanctum cookies across Vercel (frontend) and Render (backend).
+    // For localhost development over HTTP, set SESSION_SAME_SITE=lax in .env if needed.
+    'same_site' => env('SESSION_SAME_SITE', 'none'),
 
     /*
     |--------------------------------------------------------------------------
